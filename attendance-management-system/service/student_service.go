@@ -32,3 +32,17 @@ func (s *StudentService) GetAllStudents() []model.Student {
 func (s *StudentService) GetStudentByID(id string) (model.Student, error) {
 	return s.repo.GetByID(id)
 }
+
+func (s *StudentService) UpdateStudent(id, name, email string) (model.Student, error) {
+	student := model.Student{
+		ID:    id,
+		Name:  name,
+		Email: email,
+	}
+	err := s.repo.Update(student)
+	return student, err
+}
+
+func (s *StudentService) DeleteStudent(id string) error {
+	return s.repo.Delete(id)
+}

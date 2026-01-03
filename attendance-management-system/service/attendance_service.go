@@ -49,3 +49,18 @@ func (s *AttendanceService) GetAttendanceByStudentID(studentID string) []model.A
 func (s *AttendanceService) GetAttendanceByDate(date string) []model.Attendance {
 	return s.attendanceRepo.GetByDate(date)
 }
+
+func (s *AttendanceService) UpdateAttendance(id, studentID, date, status string) (model.Attendance, error) {
+	attendance := model.Attendance{
+		ID:        id,
+		StudentID: studentID,
+		Date:      date,
+		Status:    status,
+	}
+	err := s.attendanceRepo.Update(attendance)
+	return attendance, err
+}
+
+func (s *AttendanceService) DeleteAttendance(id string) error {
+	return s.attendanceRepo.Delete(id)
+}

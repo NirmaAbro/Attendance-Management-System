@@ -56,3 +56,35 @@ func (h *AttendanceHandler) GetAttendanceByDate(w http.ResponseWriter, r *http.R
 	attendance := h.service.GetAttendanceByDate(date)
 	json.NewEncoder(w).Encode(attendance)
 }
+
+func (h *AttendanceHandler) UpdateAttendance(w http.ResponseWriter, r *http.Request) {
+	parts := strings.Split(r.URL.Path, "/")
+	id := parts[len(parts)-1]
+
+	var req struct {
+		StudentID string `json:"student_id"`
+		Date      string `json:"date"`
+		Status    string `json:"status"`
+	}
+	json.NewDecoder(r.Body).Decode(&req)
+
+	attendance, err := h.service.UpdateAttendance(id, req.StudentID, req.Date, req.Status)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(attendance)
+}
+
+func (h *AttendanceHandler) DeleteAttendance(w http.ResponseWriter, r *http.Request) {
+	parts := strings.Split(r.URL.Path, "/")
+	id := parts[len(parts)-1]
+
+	err := h.service.DeleteAttendance(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+

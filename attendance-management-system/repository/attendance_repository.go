@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"sync"
 
 	"attendance-management-system/model"
@@ -11,6 +12,8 @@ type AttendanceRepository interface {
 	GetAll() []model.Attendance
 	GetByStudentID(studentID string) []model.Attendance
 	GetByDate(date string) []model.Attendance
+	Update(attendance model.Attendance) error
+	Delete(id string) error
 }
 
 type InMemoryAttendanceRepository struct {
@@ -63,4 +66,30 @@ func (r *InMemoryAttendanceRepository) GetByDate(date string) []model.Attendance
 		}
 	}
 	return result
+}
+
+func (r *InMemoryAttendanceRepository) Update(attendance model.Attendance) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for i, a := range r.data {
+		if a.ID == attendance.ID {
+			r.data[i] = attendance
+			return nil
+		}
+	}
+	return errors.New("attendance not found")
+}
+
+func (r *InMemoryAttendanceRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	for i, a := range r.data {
+		if a.ID == id {
+			r.data = append(r.data[:i], r.data[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("attendance not found")
 }

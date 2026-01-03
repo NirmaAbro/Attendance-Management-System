@@ -11,6 +11,8 @@ type StudentRepository interface {
 	Create(student model.Student) error
 	GetAll() []model.Student
 	GetByID(id string) (model.Student, error)
+	Update(student model.Student) error
+	Delete(id string) error
 }
 
 type InMemoryStudentRepository struct {
@@ -52,4 +54,28 @@ func (r *InMemoryStudentRepository) GetByID(id string) (model.Student, error) {
 		return model.Student{}, errors.New("student not found")
 	}
 	return student, nil
+}
+
+// update studnet
+func (r *InMemoryStudentRepository) Update(student model.Student) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.data[student.ID]; !ok {
+		return errors.New("student not found")
+	}
+	r.data[student.ID] = student
+	return nil
+}
+
+// delet student
+func (r *InMemoryStudentRepository) Delete(id string) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	if _, ok := r.data[id]; !ok {
+		return errors.New("student not found")
+	}
+	delete(r.data, id)
+	return nil
 }
