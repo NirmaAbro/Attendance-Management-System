@@ -140,7 +140,7 @@ This project fulfills all requirements of a distributed web-based Attendance Man
 
 ## 👤 Author
 
-**Nirma Abro**
+****
 
 ---
 
