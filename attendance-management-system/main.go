@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"attendance-management-system/handler"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+
 	studentRepo := repository.NewStudentRepository()
 	attendanceRepo := repository.NewAttendanceRepository()
 
@@ -36,5 +38,19 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/attendance/student/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			attendanceHandler.GetAttendanceByStudent(w, r)
+		}
+	})
+
+	http.HandleFunc("/attendance/date/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			attendanceHandler.GetAttendanceByDate(w, r)
+		}
+	})
+
+	fmt.Println("✅ Server running on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
+
 }

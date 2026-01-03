@@ -1,10 +1,10 @@
 package handler
 
 import (
+	"attendance-management-system/service"
 	"encoding/json"
 	"net/http"
-
-	"attendance-management-system/service"
+	"strings"
 )
 
 type AttendanceHandler struct {
@@ -36,5 +36,23 @@ func (h *AttendanceHandler) MarkAttendance(w http.ResponseWriter, r *http.Reques
 
 func (h *AttendanceHandler) GetAllAttendance(w http.ResponseWriter, r *http.Request) {
 	attendance := h.service.GetAllAttendance()
+	json.NewEncoder(w).Encode(attendance)
+}
+
+// 🔹 ADD: Get attendance by student ID
+func (h *AttendanceHandler) GetAttendanceByStudent(w http.ResponseWriter, r *http.Request) {
+	parts := strings.Split(r.URL.Path, "/")
+	studentID := parts[len(parts)-1]
+
+	attendance := h.service.GetAttendanceByStudentID(studentID)
+	json.NewEncoder(w).Encode(attendance)
+}
+
+// 🔹 ADD: Get attendance by date
+func (h *AttendanceHandler) GetAttendanceByDate(w http.ResponseWriter, r *http.Request) {
+	parts := strings.Split(r.URL.Path, "/")
+	date := parts[len(parts)-1]
+
+	attendance := h.service.GetAttendanceByDate(date)
 	json.NewEncoder(w).Encode(attendance)
 }

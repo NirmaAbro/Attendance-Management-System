@@ -45,3 +45,7 @@ func (s *AttendanceService) GetAllAttendance() []model.Attendance {
 func (s *AttendanceService) GetAttendanceByStudentID(studentID string) []model.Attendance {
 	return s.attendanceRepo.GetByStudentID(studentID)
 }
+
+func (s *AttendanceService) GetAttendanceByDate(date string) []model.Attendance {
+	return s.attendanceRepo.GetByDate(date)
+}

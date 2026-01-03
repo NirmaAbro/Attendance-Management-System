@@ -10,6 +10,7 @@ type AttendanceRepository interface {
 	Create(attendance model.Attendance) error
 	GetAll() []model.Attendance
 	GetByStudentID(studentID string) []model.Attendance
+	GetByDate(date string) []model.Attendance
 }
 
 type InMemoryAttendanceRepository struct {
@@ -45,6 +46,19 @@ func (r *InMemoryAttendanceRepository) GetByStudentID(studentID string) []model.
 	result := []model.Attendance{}
 	for _, a := range r.data {
 		if a.StudentID == studentID {
+			result = append(result, a)
+		}
+	}
+	return result
+}
+
+func (r *InMemoryAttendanceRepository) GetByDate(date string) []model.Attendance {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	result := []model.Attendance{}
+	for _, a := range r.data {
+		if a.Date == date {
 			result = append(result, a)
 		}
 	}
